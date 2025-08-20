@@ -27,7 +27,7 @@ def cleanup_csv(file_path):
 
 
 TEST_FOLDER = "/Users/abi/Desktop/desktop 2.0/foldermanagerai/test folder"
-OUTPUT_FILE = os.path.join(TEST_FOLDER, "file_list.csv")
+OUTPUT_FILE = os.path.join("/Users/abi/Desktop/desktop 2.0/foldermanagerai/filemanagerAI/data", "file_list.csv")
 
  
 def initial_check_initiator(manage_folder, csv_file):
