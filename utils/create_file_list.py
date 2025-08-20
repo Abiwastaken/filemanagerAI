@@ -1,7 +1,31 @@
-import os
+import os 
 import csv
 from datetime import datetime
-import extract_info_from_files
+
+def get_file_info(file_path):
+    """
+    Returns a dictionary of metadata for a given file.
+    
+    Args:
+        file_path (str): The full path to the file.
+        
+    Returns:
+        dict: A dictionary containing 'size', 'last_modified', and 'file_type'.
+    """
+    file_info = {}
+    try:
+        file_info['size'] = os.path.getsize(file_path)
+        mod_timestamp = os.path.getmtime(file_path)
+        create_timestamp = os.path.getctime(file_path)
+        file_info['creation_date'] = datetime.fromtimestamp(create_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        file_info['last_modified'] = datetime.fromtimestamp(mod_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        file_info['file_type'] = os.path.splitext(file_path)[1].lower()
+    except (OSError, ValueError):
+        file_info['size'] = -1
+        file_info['last_modified'] = 'N/A'
+        file_info['file_type'] = 'N/A'
+        file_info['creation_date'] = 'N/A'
+    return file_info
 def create_file_list_csv(root_folder, output_csv):
     
     existing_files = set()
@@ -39,61 +63,19 @@ def create_file_list_csv(root_folder, output_csv):
             for app_name in app_packages:
                 full_path = os.path.join(dirpath, app_name)
                 if full_path not in existing_files:
-                    # info = get_file_info(full_path)
-                    csv_writer.writerow([full_path, 'File'])
+                    info = get_file_info(full_path)
+                    csv_writer.writerow([full_path, 'File', info['size'], info['creation_date'], info['last_modified'],  info['file_type']])
                     existing_files.add(full_path)
             for dirname in dirnames:
                 full_path = os.path.join(dirpath, dirname)
                 if full_path not in existing_files:
-                    csv_writer.writerow([full_path, 'Folder'])
+                    csv_writer.writerow([full_path, 'Folder', '', '', '', ''])
                     existing_files.add(full_path)
             
             for filename in filenames:
                 if not filename.startswith('.'):
                     full_path = os.path.join(dirpath, filename)
                     if full_path not in existing_files:
-                        csv_writer.writerow([full_path, 'File'])
+                        info_file = get_file_info(full_path)
+                        csv_writer.writerow([full_path, 'File', info_file['size'], info_file['creation_date'], info_file['last_modified'], info_file['file_type']])
                         existing_files.add(full_path)
-
-
-
-
-def cleanup_csv(file_path):
-    if os.path.exists(file_path):
-        confirm = input(f" Are you sure you want to erase '{file_path}' and start fresh? (y/n): ").strip().lower()
-        if confirm == "y":
-            with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
-                csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)', 'Last Modified', 'File Type'])
-            print(f"Successfully cleaned up '{file_path}'.")
-            return True
-        else:
-            print("Cleanup aborted. File was not modified.")
-            return False
-    else:
-        with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
-                csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)', 'Last Modified', 'File Type'])
-        print(f"Created new CSV '{file_path}' with header.")
-        return True
-
-
-TEST_FOLDER = "/Users/abi/Desktop/desktop 2.0/foldermanagerai/test folder"
-OUTPUT_FILE = "file_list.csv"
- 
-def initial_check_initiator(manage_folder, csv_file):
-    if os.path.exists(manage_folder):
-        if cleanup_csv(csv_file):  # only continue if cleanup succeeded
-            create_file_list_csv(manage_folder, csv_file)
-            print(f"Successfully created '{csv_file}' with a list of all files and folders.")
-        else:
-            print("Process halted due to cleanup cancellation.")
-    else:
-        print(f"Error: The folder '{manage_folder}' does not exist.")
-
-
-
-
-
-
-initial_check_initiator(TEST_FOLDER,OUTPUT_FILE)
