@@ -27,7 +27,19 @@ def cleanup_csv(file_path):
 
 
 TEST_FOLDER = "/Users/abi/Desktop/desktop 2.0/foldermanagerai/test folder"
-OUTPUT_FILE = os.path.join("/Users/abi/Desktop/desktop 2.0/foldermanagerai/filemanagerAI/data", "file_list.csv")
+# This ensures the folder is created where the script is run.
+current_directory = os.getcwd()
+
+# Step 2: Define the path for the new 'data' folder.
+data_folder_path = os.path.join(current_directory, "data")
+
+# Step 3: Create the 'data' folder if it doesn't already exist.
+# exist_ok=True prevents an error if the folder is already there.
+os.makedirs(data_folder_path, exist_ok=True)
+
+# Step 4: Define the final path for the CSV file inside the new folder.
+OUTPUT_FILE = os.path.join(data_folder_path, "file_list.csv")
+
 
  
 def initial_check_initiator(manage_folder, csv_file):
