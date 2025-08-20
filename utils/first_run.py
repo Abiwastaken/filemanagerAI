@@ -26,7 +26,7 @@ def cleanup_csv(file_path):
         return True
 
 
-TEST_FOLDER = "/Users/abi/Desktop/desktop 2.0/foldermanagerai/test folder"
+TEST_FOLDER = "/Users/abi/Downloads"
 # This ensures the folder is created where the script is run.
 current_directory = os.getcwd()
 

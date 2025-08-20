@@ -69,7 +69,7 @@ def create_file_list_csv(root_folder, output_csv):
             for dirname in dirnames:
                 full_path = os.path.join(dirpath, dirname)
                 if full_path not in existing_files:
-                    csv_writer.writerow([full_path, 'Folder', '', '', '', ''])
+                    csv_writer.writerow([full_path, 'Folder', 'N/A', 'N/A', 'N/A', 'N/A'])
                     existing_files.add(full_path)
             
             for filename in filenames:
