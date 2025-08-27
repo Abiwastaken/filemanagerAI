@@ -13,6 +13,7 @@ def get_file_info(file_path):
         dict: A dictionary containing 'size', 'last_modified', and 'file_type'.
     """
     file_info = {}
+    special_folders = ['/Users/abi/Desktop/desktop 2.0/yssiim','/Users/abi/Desktop/desktop 2.0/foldermanagerai/test folder/OntheSpot']
     try:
         file_info['size'] = os.path.getsize(file_path)
         mod_timestamp = os.path.getmtime(file_path)
@@ -20,6 +21,11 @@ def get_file_info(file_path):
         file_info['creation_date'] = datetime.fromtimestamp(create_timestamp).strftime('%Y-%m-%d %H:%M:%S')
         file_info['last_modified'] = datetime.fromtimestamp(mod_timestamp).strftime('%Y-%m-%d %H:%M:%S')
         file_info['file_type'] = os.path.splitext(file_path)[1].lower()
+        for path in special_folders:
+            if file_path.startswith(path):
+                file_info['Special'] = 1
+            else:
+                file_info['Special'] = 0
     except (OSError, ValueError):
         file_info['size'] = -1
         file_info['last_modified'] = 'N/A'
@@ -64,12 +70,13 @@ def create_file_list_csv(root_folder, output_csv):
                 full_path = os.path.join(dirpath, app_name)
                 if full_path not in existing_files:
                     info = get_file_info(full_path)
-                    csv_writer.writerow([full_path, 'File', info['size'], info['creation_date'], info['last_modified'],  info['file_type']])
+                    csv_writer.writerow([full_path, 'File', info['size'], info['creation_date'], info['last_modified'],  info['file_type'], info['Special']])
                     existing_files.add(full_path)
             for dirname in dirnames:
                 full_path = os.path.join(dirpath, dirname)
                 if full_path not in existing_files:
-                    csv_writer.writerow([full_path, 'Folder', 'N/A', 'N/A', 'N/A', 'N/A'])
+                    info_dir = get_file_info(full_path)
+                    csv_writer.writerow([full_path, 'Folder', info_dir['size'], info_dir['creation_date'], info_dir['last_modified'], 'N/A', info_dir['Special']])
                     existing_files.add(full_path)
             
             for filename in filenames:
@@ -77,5 +84,5 @@ def create_file_list_csv(root_folder, output_csv):
                     full_path = os.path.join(dirpath, filename)
                     if full_path not in existing_files:
                         info_file = get_file_info(full_path)
-                        csv_writer.writerow([full_path, 'File', info_file['size'], info_file['creation_date'], info_file['last_modified'], info_file['file_type']])
+                        csv_writer.writerow([full_path, 'File', info_file['size'], info_file['creation_date'], info_file['last_modified'], info_file['file_type'],   info_file['Special']])
                         existing_files.add(full_path)

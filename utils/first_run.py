@@ -12,7 +12,7 @@ def cleanup_csv(file_path):
         if confirm == "y":
             with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
                 csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)','Creation date', 'Last Modified', 'File Type'])
+                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)','Creation date', 'Last Modified', 'File Type', 'Special'])
             print(f"Successfully cleaned up '{file_path}'.")
             return True
         else:
@@ -21,12 +21,12 @@ def cleanup_csv(file_path):
     else:
         with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
                 csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)', 'Creation date', 'Last Modified', 'File Type'])
+                csv_writer.writerow(['File Path', 'Type', 'Size (bytes)', 'Creation date', 'Last Modified', 'File Type', 'Special'])
         print(f"Created new CSV '{file_path}' with header.")
         return True
 
 
-TEST_FOLDER = "/Users/abi/Downloads"
+TEST_FOLDER = "/Users/abi/Desktop/desktop 2.0/ytforSOft"
 # This ensures the folder is created where the script is run.
 current_directory = os.getcwd()
 
@@ -38,7 +38,7 @@ data_folder_path = os.path.join(current_directory, "data")
 os.makedirs(data_folder_path, exist_ok=True)
 
 # Step 4: Define the final path for the CSV file inside the new folder.
-OUTPUT_FILE = os.path.join(data_folder_path, "file_list.csv")
+OUTPUT_FILE = os.path.join(data_folder_path, "te_list.csv")
 
 
  
@@ -55,6 +55,5 @@ def initial_check_initiator(manage_folder, csv_file):
 
 
 
-
-
+    
 initial_check_initiator(TEST_FOLDER,OUTPUT_FILE)
